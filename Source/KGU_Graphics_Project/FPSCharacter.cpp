@@ -111,8 +111,6 @@ void AFPSCharacter::Fire()
 		// MuzzleOffset 을 카메라 스페이스에서 월드 스페이스로 변환합니다.
 		FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
 		FRotator MuzzleRotation = CameraRotation;
-		// 조준을 약간 윗쪽으로 올려줍니다.
-		MuzzleRotation.Pitch += 10.0f;
 		UWorld* World = GetWorld();
 		if (World)
 		{
@@ -121,12 +119,6 @@ void AFPSCharacter::Fire()
 			SpawnParams.Instigator = GetInstigator();
 			// 총구 위치에 발사체를 스폰시킵니다.
 			AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Projectile)
-			{
-				// 발사 방향을 알아냅니다.
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Projectile->FireInDirection(LaunchDirection);
-			}
 		}
 	}
 }
