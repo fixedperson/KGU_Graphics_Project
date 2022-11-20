@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+int value;
+
 // Sets default values
 AFPSProjectile::AFPSProjectile()
 {
@@ -13,10 +15,13 @@ AFPSProjectile::AFPSProjectile()
 
 	// 구체를 단순 콜리전 표현으로 사용합니다.
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	// 구체의 콜리전 반경을 설정합니다.
-	CollisionComponent->InitSphereRadius(15.0f);
 	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+
 	CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile::OnHit);
+
+	// 구체의 콜리전 반경을 설정합니다.
+	CollisionComponent->InitSphereRadius(5.0f);
+
 	// 루트 컴포넌트를 콜리전 컴포넌트로 설정합니다.
 	RootComponent = CollisionComponent;
 
@@ -29,8 +34,10 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
-	// 3 초 후 죽습니다.
-	InitialLifeSpan = 3.0f;
+	// 2 초 후 죽습니다.
+	InitialLifeSpan = 2.0f;
+
+	value = 0;
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +64,6 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 {
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+		OtherComponent->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 	}
 }
