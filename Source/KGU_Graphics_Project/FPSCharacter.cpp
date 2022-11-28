@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "FPSProjectile.h"
 
+
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
@@ -34,6 +35,8 @@ AFPSCharacter::AFPSCharacter()
 
 	// 자신 이외 모두가 일반 몸통 메시를 볼 수 있습니다.
 	GetMesh()->SetOwnerNoSee(true);
+
+	this->count = 10;
 }
 
 // Called when the game starts or when spawned
@@ -114,11 +117,17 @@ void AFPSCharacter::Fire()
 		UWorld* World = GetWorld();
 		if (World)
 		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetInstigator();
-			// 총구 위치에 발사체를 스폰시킵니다.
-			AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+			if (this->count > 0) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				SpawnParams.Instigator = GetInstigator();
+				// 총구 위치에 발사체를 스폰시킵니다.
+				AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+				this->count--;
+			}
+			else {
+				this->PrintOnBulletError();
+			}
 		}
 	}
 }

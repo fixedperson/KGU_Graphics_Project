@@ -47,6 +47,14 @@ public:
 	UFUNCTION()
 	void Fire();
 
+	// 총알 에러메세지 출력
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrintOnBulletError();
+
+	// 남은 총알 갯수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = bullet)
+	int count;
+
 	// FPS 카메라
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* FPSCameraComponent;
@@ -62,4 +70,5 @@ public:
 	// 스폰시킬 프로젝타일 클래스
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
+
 };
